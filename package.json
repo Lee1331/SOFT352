@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Lee1331/SOFT352/issues"
   },
-  "homepage": "https://github.com/Lee1331/SOFT352#readme"
+  "homepage": "https://github.com/Lee1331/SOFT352#readme",
+  "devDependencies": {
+    "jest": "^23.6.0"
+  }
 }
