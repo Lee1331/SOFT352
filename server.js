@@ -8,7 +8,7 @@ let users = [];
 let connections = [];
 
 let server = app.listen(5500, function(){
-    console.log('server started, and listening to requests on port 5500')
+    console.log('server started, and listening to requests on port 5500');
 });
 
 //Serve the static files in the public folder to the browser, these are the files that the users will see

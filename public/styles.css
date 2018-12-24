@@ -142,6 +142,11 @@ button{
     width: 32%;
 
 }
+#squareBtn{
+    background-color: #008CBA;
+    width: 32%;
+
+}
 /*tabSection*/
 #tabSection{
     width: 100%;

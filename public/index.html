@@ -69,18 +69,21 @@
 
         <div id="CameraSection" class="tabcontent">
             <h3>Cameras</h3>
+            <video autoplay playsinline></video>
         </div>
 
         <div id="PaletteSection" class="tabcontent">
             <h3>Palette</h3>
             <h4>Shapes</h4>
+            <button id="squareBtn" onclick="brushSquare()">Square</button>
             <h4>Colours</h4>
-            <button id="redBtn" onclick="brushRed">Red</button>
-            <button id="greenBtn" onclick="brushGreen">Green</button>
-            <button id="blueBtn"onclick="brushBlue">Blue</button>
-            
+            <button id="redBtn" onclick="brushRed()">Red</button>
+            <button id="greenBtn" onclick="brushGreen()">Green</button>
+            <button id="blueBtn"onclick="brushBlue()">Blue</button>
+            <button id="randomBtn"onclick="randomColour()">Random Colour</button>
+            <h4>Hue</h4>
         </div>
-        
+
     </div>
     <!--</div>-->
 </body>
@@ -88,6 +91,7 @@
 <script src="tabs.js"></script>
 <script src="sockets.js"></script>
 <script src="chat.js"></script>
+<script src="cameras.js"></script>
 
 <script src="canvas.js"></script>
 
