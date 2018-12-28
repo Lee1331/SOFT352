@@ -1,28 +1,56 @@
 'use strict';
 
-//set constraints, these being the 'rules' of the app
+//initilaise room creation
+let isInitiator;
+
+//set the element that will display the local users webcam stream
+let localVideo = document.getElementById("localVideo");
+
+//set the variable that will store the local users webcam stream
+let localStream;
+
+//create room object
+window.room = prompt("Enter room name:");
+
+//let socket = io.connect();
+
+//if the room is empty
+if (room !== "") {
+    console.log('Client is asking to join room ' + room);
+    //emit the 'create/join message which will create a room for the user to join
+    socket.emit('create/join', room);
+}
+//on room creation
+socket.on('createdRoom', function(room, clientId) {
+    isInitiator = true;
+});
+
+//on a full room
+socket.on('fullRoom', function(room) {
+    console.log('Message from client: Room ' + room + ' is full :^(');
+});
+
+//on user joining a room
+socket.on('joined', function(room, clientId) {
+    isInitiator = false;
+});
+
+//set WebRTC constraints, we are only using video for now
 const mediaStreamConstraints = {
     video: true,
 };
-//set the parent element where the users camera will be displayed
-const localVideo = document.querySelector("video");
 
-//the users stream that will be reproduced on the video
-let localStream;
-
-//create function to add the mediaStream to the video element
-function gotLocalMediaStream(mediaStream){
+//adds the MediaStream to the 'localVideo' div.
+function gotLocalMediaStream(mediaStream) {
+    console.log('Adding local stream.');
     localStream = mediaStream;
     localVideo.srcObject = mediaStream;
 }
 
-//in the event of an error, display this message
-function handleLocalStreamError(error){
-    console.log("navigator.getUserMedia error: ", error);
-} 
+//display a message in the event of an error.
+function handleLocalMediaStreamError(error) {
+    console.log('navigator.getUserMedia error: ', error);
+}
 
-//Init media stream
-    //1 - set the constraints
-    //2 - then call gotLocalMediaStream so we can display the users stream from their webcam
-    //3 - catch any errors and display the message in the console.log 
-navigator.mediaDevices.getUserMedia(mediaStreamConstraints).then(gotLocalMediaStream).catch(handleLocalStreamError);
+// Initializes media stream.
+navigator.mediaDevices.getUserMedia(mediaStreamConstraints).then(gotLocalMediaStream).catch(handleLocalMediaStreamError);
