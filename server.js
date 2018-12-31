@@ -2,9 +2,6 @@ let express = require('express');
 let socket = require('socket.io');
 let os = require('os');
 
-let users = [];
-let connections = [];
-
 //create an express app/instance
 let app = express();
 
@@ -18,14 +15,53 @@ app.use(express.static('public'));
 //create a socket on this server
 let io = socket(server);
 
+//roomNumber
+let roomNumber = 1;
+
+let tmUsers = [];
+let tmConnections = [];
 //if a user connects to the server...
     //handle 'chat', 'typing', 'mouse', events 
 io.on('connection', function(socket){
+    
+    /*if(io.nsps['/'].adapter.rooms["room-"+roomNumber] && io.nsps['/'].adapter.rooms["room-"+roomNumber].length > 1) roomNumber++;
+    socket.join("room-"+roomNumber);
 
-    socket.on('chat',function(data){
+    io.sockets.in("room-"+roomNumber).emit('connectToRoom', "You are in room "+roomNumber);*/
+
+    socket.on('chat', function(data){
         io.sockets.emit('chat', data);
     });
-    
+
+    tmConnections.push(socket);
+    console.log("Connected: %s sockets connected", tmConnections.length);
+
+    socket.on('disconnect', function(data){
+        //if(!socket.username) return;
+        tmUsers.splice(tmUsers.indexOf(socket.username), 1);
+        updateUsernames();
+        tmConnections.splice(tmConnections.indexOf(socket), 1);
+        console.log("Disconnected: %s sockets connected", tmConnections.length);
+    });
+
+    socket.on('new user', function (data, callback) {
+        callback(true);
+        //take the data thats passed into 'new user' when it's emitted and set it as the socket username
+        socket.username = data;
+        //prints username
+        console.log('socket.username = ' + socket.username);
+        
+        tmUsers.push(socket.username);
+        updateUsernames();
+        console.log('tmUsers after "new user" is emittted = ' + tmUsers);
+    });
+
+    function updateUsernames(){
+        //socket.emit('get users', tmUsers);
+        io.sockets.emit('get users', tmUsers);
+        console.log('updated tmUsers: ' + tmUsers);
+    }
+
     //listen for the 'typing' message - which we created and are using for whenever the user types into the fields
     //data is the users handle
     socket.on('typing', function(data){
@@ -39,6 +75,7 @@ io.on('connection', function(socket){
     socket.on('mouse', function(data){  
 
         //call the 'broadcast.emit' function to send a message back out to all other sockets outside of the one sendning the message
+        //socket.broadcast.emit('mouse', data);
         socket.broadcast.emit('mouse', data);
 
         //print the data from the 'mouse' message we created
@@ -46,32 +83,8 @@ io.on('connection', function(socket){
         //console.log(data);
     });
 
-    //WebRTC
-    //when the 'create/room' message is emitted
-    socket.on('create/join', function(room){
-        console.log('Received request to create or join room ' + room);
-
-        let clientsInRoom = io.sockets.adapter.rooms[room];
-        let numClients = clientsInRoom ? Object.keys(clientsInRoom.sockets).length : 0;
-    
-        console.log('Room ' + room + ' now has ' + numClients + ' client(s)');
-        //document.getElementById("roomNumber").innerHTML = room;
-
-        //if there's no-one in the room 
-        if(numClients === 0){
-            socket.join(room);
-            console.log('Client ID ' + socket.id + ' created room ' + room);
-            socket.emit('createdRoom', room, socket.id);
-
-        } 
-        //if there is 5, or less than 5 users in a current room
-        else if (numClients <= 5){
-            console.log('Client ID ' + socket.id + ' joined room ' + room);
-            socket.join(room);
-            socket.emit('joined', room, socket.id);
-        } else {
-            socket.emit('fullRoom', room);
-        }
+    socket.on('message', function(message) {
+        //console.log('Client received message:', message);
+        //start();
     });
-
 });
