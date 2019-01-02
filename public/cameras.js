@@ -53,6 +53,7 @@ socket.on('joined', function(room, clientId) {
     isInitiator = false;
 });
 */
+/*
 //set WebRTC constraints, we are only using video for now
 const mediaStreamConstraints = {
     video: true,
@@ -116,4 +117,46 @@ function handleRemoteStreamAdded(event) {
 function handleRemoteStreamRemoved(event) {
     console.log('Remote stream removed. Event: ', event);
 }
+*/
 
+let canvas;
+let chatCanvas;
+let video;
+let id = null;
+
+function setup() { 
+    canvas = createCanvas(320, 240);
+    //canvas.parent('cameraCanvas');
+    video = createCapture(VIDEO);
+    video.size(320, 240);
+    video.hide();
+
+}
+
+socket.on('myId', function (myId) {
+    id = myId;
+
+});
+
+socket.on('usuarios', function (user) {
+    $('img').remove();
+
+    $.each(user, function(index, val){
+        if(val != id){
+            $('body').append('<img id='+val+'>');
+
+        }
+    });
+});
+
+socket.on('updateUser', function (data) {
+    $('#'+data.id).attr('src', data.capture);
+});
+
+function draw() {
+    image(video, 0, 0, 320, 240);
+
+    if (frameRate() > 55 && id != null){
+        socket.emit('updateUser', {id:id, capture:canvas.canvas.toDataURL()});
+    }
+}

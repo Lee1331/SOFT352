@@ -87,4 +87,24 @@ io.on('connection', function(socket){
         //console.log('Client received message:', message);
         //start();
     });
+
+    let user = [];
+    socket.emit('myId', user.length);
+	console.log(user);
+	user.push(user.length);
+	
+	io.emit('usuarios', user);
+	
+	socket.on('updateUser', function(data){
+        socket.broadcast.emit('updateUser', data);
+    });
+
+	socket.on('part', function(data){
+		socket.emit('part', data);
+	});
+
+	socket.on('updateImage', function(data){
+		socket.broadcast.emit('updateImage',data);
+	});
+
 });

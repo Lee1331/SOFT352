@@ -171,3 +171,13 @@ button{
     margin-top: 30px;
     display: none;
 }*/
+ul#tmUsers li {
+    list-style-type: none;
+    border: 1px solid #555;
+    
+}
+
+img{
+    width: 320px;
+    height: 240px;
+}
