@@ -118,6 +118,33 @@ function randomColour(){
 
 */
 
+let cameraCanvasDiv = document.getElementById('cameraCanvas');
+let id = null;
+
+socket.on('myId', function (myId) {
+    id = myId;
+    console.log('myId = ' + myId);
+
+});
+
+socket.on('users', function (user) {
+    $('img').remove();
+
+    $.each(user, function(index, val){
+        if(val != id){
+            //$('cameraCanvas').append('<img id='+val+'>');
+            //$('cameraWindow').append('<img id='+val+'>');
+            cameraCanvasDiv.insertAdjacentHTML('beforeend', '<img id='+val+'>');
+
+        }
+    });
+});
+socket.on('updateUser', function (data) {
+    $('#'+data.id).attr('src', data.capture);
+    //console.log(data.id);
+});
+
+
 let canvasSketch = function(canvas) {
     let canvasDiv = document.getElementById('canvas');
     let canvasWidth = canvasDiv.offsetWidth; 
@@ -176,5 +203,45 @@ let canvasSketch = function(canvas) {
     });
 }
 
-let myp5_2 = new p5(canvasSketch, 'canvas');
+let p5_CanvasSketch = new p5(canvasSketch, 'canvas');
+
+//Sketch 1
+let cameraSketch = function(canvas) {
+    //canvas.cameraCanvasDiv = document.getElementById('cameraCanvas');
+    //canvas.canvasWidth = canvas.cameraCanvasDiv.offsetWidth; 
+    //canvas.canvasHeight = canvas.cameraCanvasDiv.offsetHeight; 
+    //canvas.x = 320;
+    //canvas.y = 480;
+    
+    //canvas.cameraCanvas; 
+    let cameraCanvas;
+
+    let cameraCanvasDiv = document.getElementById('cameraCanvas');
+    //console.log('cameraCanvasDiv = ' + cameraCanvasDiv.offsetWidth)
+    //let canvasWidth = cameraCanvasDiv.offsetWidth; 
+    //let canvasHeight = cameraCanvasDiv.offsetHeight; 
+    let canvasWidth = 320; 
+    let canvasHeight = 240;
+    //let canvasWidth = cameraCanvasDiv.clientWidth; 
+    //let canvasHeight = cameraCanvasDiv.clientHeight; 
+    
+    canvas.video;
+    console.log(`canvasWidth = ${canvasWidth}, canvasHeight = ${canvasHeight}`);
+    canvas.setup = function() {
+        canvas.createCanvas(canvasWidth, canvasHeight);
+        canvas.video = canvas.createCapture(canvas.VIDEO);
+        canvas.video.size(canvasWidth, canvasHeight);
+        canvas.video.hide();
+    }
+    canvas.draw = function() {
+        canvas.image(canvas.video, 0, 0, canvasWidth, canvasHeight);
+
+        if (canvas.frameRate() > 55 && id != null){
+            //socket.emit('updateUser', {id:id, capture:cameraCanvas.canvas.toDataURL()});
+            socket.emit('updateUser', {id:id, capture:canvas.canvas.toDataURL()});
+        }
+
+    }
+}
+let p5_CameraSketch = new p5(cameraSketch, 'cameraCanvas');
 

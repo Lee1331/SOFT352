@@ -119,6 +119,9 @@ function handleRemoteStreamRemoved(event) {
 }
 */
 
+
+
+/*
 let canvas;
 let chatCanvas;
 let video;
@@ -157,6 +160,8 @@ function draw() {
     image(video, 0, 0, 320, 240);
 
     if (frameRate() > 55 && id != null){
-        socket.emit('updateUser', {id:id, capture:canvas.canvas.toDataURL()});
+        //socket.emit('updateUser', {id:id, capture:canvas.canvas.toDataURL()});
+        socket.emit('updateUser', {id:id, capture:p5_CameraSketch.canvas.toDataURL()});
     }
 }
+*/

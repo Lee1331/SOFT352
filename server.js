@@ -20,10 +20,37 @@ let roomNumber = 1;
 
 let tmUsers = [];
 let tmConnections = [];
+
+let user = [];
 //if a user connects to the server...
     //handle 'chat', 'typing', 'mouse', events 
 io.on('connection', function(socket){
     
+    
+    //socket.emit('myId', user.length);
+	//console.log(user);
+	//user.push(user.length);
+	//io.emit('users', user);
+    socket.emit('myId', user.length);
+	console.log(user);
+	user.push(user.length);
+	io.emit('users', user);
+	
+	socket.on('updateUser', function(data){
+        socket.broadcast.emit('updateUser', data);
+        //socket.emit('updateUser', data);
+    });
+
+	socket.on('part', function(data){
+		socket.emit('part', data);
+	});
+
+	socket.on('updateImage', function(data){
+		socket.broadcast.emit('updateImage',data);
+		//socket.emit('updateImage',data);
+	});
+
+
     /*if(io.nsps['/'].adapter.rooms["room-"+roomNumber] && io.nsps['/'].adapter.rooms["room-"+roomNumber].length > 1) roomNumber++;
     socket.join("room-"+roomNumber);
 
@@ -87,24 +114,5 @@ io.on('connection', function(socket){
         //console.log('Client received message:', message);
         //start();
     });
-
-    let user = [];
-    socket.emit('myId', user.length);
-	console.log(user);
-	user.push(user.length);
-	
-	io.emit('usuarios', user);
-	
-	socket.on('updateUser', function(data){
-        socket.broadcast.emit('updateUser', data);
-    });
-
-	socket.on('part', function(data){
-		socket.emit('part', data);
-	});
-
-	socket.on('updateImage', function(data){
-		socket.broadcast.emit('updateImage',data);
-	});
 
 });
