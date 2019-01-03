@@ -103,7 +103,7 @@ button{
     cursor: pointer;
     transition: 0.3s;
     font-size: 17px;
-    width: 25%;
+    width: 33.3%;
 }
 
 /* Change background color of buttons on hover */
@@ -127,26 +127,6 @@ button{
     border-top: none;
 }
 
-/*Style Palette Buttons*/
-#redBtn{
-    background-color: #f44336;
-    width: 32%;
-}
-#greenBtn{
-    background-color: #4CAF50; 
-    width: 32%;
-
-}
-#blueBtn{
-    background-color: #008CBA;
-    width: 32%;
-
-}
-#squareBtn{
-    background-color: #008CBA;
-    width: 32%;
-
-}
 /*tabSection*/
 #tabSection{
     width: 100%;
@@ -171,7 +151,7 @@ button{
     margin-top: 30px;
     display: none;
 }*/
-ul#tmUsers li {
+ul#users li {
     list-style-type: none;
     border: 1px solid #555;
     

@@ -1,43 +1,30 @@
 //create connection
 
-//socket running on the front end
-//socket = io.connect('http://localhost:5500');
-
-//let userNameTest = window.prompt('Enter Username');
-
 let username = document.getElementById('username');
 let message = document.getElementById('message');
 let output = document.getElementById('output');
 let feedback = document.getElementById('feedback');
 let btn = document.getElementById('sendMessage');
 
-
-//room
-//let roomNumberDiv = document.getElementById('roomNumber');
-
-let tmUserForm = document.getElementById('tmUserForm');
-let tmUserFormArea = document.getElementById('tmUserFormArea');
+let userForm = document.getElementById('userForm');
+let userFormArea = document.getElementById('userFormArea');
 let tmUsers = document.getElementById('tmUsers');
-let tmUsername = document.getElementById('tmUsername');
+let usernameFormValue = document.getElementById('usernameFormValue');
 
-//tmUserForm.on('submit',function(event){
-tmUserForm.addEventListener("submit", function(event){
+userForm.addEventListener("submit", function(event){
     event.preventDefault();
-    socket.emit('new user', tmUsername.value, function(data){
+    
+    socket.emit('new user', usernameFormValue.value, function(data){
         if(data){
-            tmUserFormArea.style.display = 'none';
+            userFormArea.style.display = 'none';
 
         }
     });
     
-    //let li = document.createElement("LI");
-    //li.append('a');
-    //tmUsers.appendChild(li);
+    usernameFormValue.value;
+    console.log('usernameFormValue.value = ' + usernameFormValue.value);
 
-    tmUsername.value;
-    console.log('tmUsername.value = ' + tmUsername.value);
 });
-//});
 
 btn.addEventListener('click', function(){
     //send a message down the web socket
@@ -49,6 +36,7 @@ btn.addEventListener('click', function(){
         //get value field of the username input field
         username: username.value
     });
+
 });
 
 //Typing, and displaying user chat messages
@@ -61,8 +49,9 @@ message.addEventListener('keypress', function(){
     }
 });
 
-//listen for events on the front end that are coming from the server
-    //listen for the server 'chat' event
+//----listen for events on the front end that are coming from the server----//
+
+//listen for the server 'chat' event
 socket.on('chat', function(data){
     //set feedback.innerHTML = empty so that the 'is typing message disapears'
     feedback.innerHTML = "";
@@ -73,32 +62,26 @@ socket.on('chat', function(data){
     else {   
         //output data to DOM via the output DOM element
         output.innerHTML += '<p><strong>'+ data.username +': </strong>' + data.message + '</p>';
-        //console.log(data.message);
     }
 });
 
-//listen for the 'typing' message
+//listen for the 'typing' event
 socket.on('typing', function(data){
     feedback.innerHTML = '<p><em>' + data + ' : is typing...</em></p>';
 });
 
-socket.on('connectToRoom',function(data) {
-    //roomNumberDiv.innerHTML = data;
-    //document.body.innerHTML = '';
-    //document.write(data);
-});
-
-socket.on('get users', function(data) {
+//listen for the 'getUsers' event
+socket.on('getUsers', function(data) {
     let li = document.createElement('li');
-        
-    //console.log('get users called')
-    //console.log('data =' + data);
-    //console.log('data length = ' + data.length);
-    
+    console.log('getUsers called, data = ' + data);
     for(i = 0; i < data.length; i++){
-        let newContent = document.createTextNode(data[i]);
-        li.appendChild(newContent);
+        //the names dont get removed when the leave the session
+        let addUsername = document.createTextNode(data[i]);
+        console.log('addUsername data[i] = ' + data[i]);
+        li.appendChild(addUsername);
+        console.log('addUsername = ' + addUsername);
         tmUsers.appendChild(li);
     }
 
+    
 });

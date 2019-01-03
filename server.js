@@ -15,26 +15,20 @@ app.use(express.static('public'));
 //create a socket on this server
 let io = socket(server);
 
-//roomNumber
-let roomNumber = 1;
-
 let tmUsers = [];
-let tmConnections = [];
+let socketConnections = [];
+let cameras = [];
 
-let user = [];
 //if a user connects to the server...
     //handle 'chat', 'typing', 'mouse', events 
 io.on('connection', function(socket){
     
+    //replace 'user []' with 'cameras []'
+    socket.emit('cameraId', cameras.length);
+	//console.log(cameras);
+	cameras.push(cameras.length);
+    io.emit('getCameras', cameras);
     
-    //socket.emit('myId', user.length);
-	//console.log(user);
-	//user.push(user.length);
-	//io.emit('users', user);
-    socket.emit('myId', user.length);
-	console.log(user);
-	user.push(user.length);
-	io.emit('users', user);
 	
 	socket.on('updateUser', function(data){
         socket.broadcast.emit('updateUser', data);
@@ -50,43 +44,53 @@ io.on('connection', function(socket){
 		//socket.emit('updateImage',data);
 	});
 
-
-    /*if(io.nsps['/'].adapter.rooms["room-"+roomNumber] && io.nsps['/'].adapter.rooms["room-"+roomNumber].length > 1) roomNumber++;
-    socket.join("room-"+roomNumber);
-
-    io.sockets.in("room-"+roomNumber).emit('connectToRoom', "You are in room "+roomNumber);*/
-
     socket.on('chat', function(data){
         io.sockets.emit('chat', data);
     });
 
-    tmConnections.push(socket);
-    console.log("Connected: %s sockets connected", tmConnections.length);
+    socketConnections.push(socket);
+    console.log('Connected, there are ' + tmUsers.length + ' users connected');
+    console.log('Connected, there are ' + socketConnections.length + ' sockets connected');
+    console.log('Connected, there are ' + cameras.length + ' cameras connected');
 
     socket.on('disconnect', function(data){
-        //if(!socket.username) return;
+        //usernames
         tmUsers.splice(tmUsers.indexOf(socket.username), 1);
         updateUsernames();
-        tmConnections.splice(tmConnections.indexOf(socket), 1);
-        console.log("Disconnected: %s sockets connected", tmConnections.length);
+        console.log('Disconnected, there are ' + tmUsers.length + ' users connected');
+        //sockets
+        socketConnections.splice(socketConnections.indexOf(socket), 1);
+        console.log('Disconnected, there are ' + socketConnections.length + ' sockets connected');
+        //cameras
+        cameras.splice(cameras.indexOf(socket), 1);
+        console.log('Disconnected, there are ' + cameras.length + ' cameras connected');
+
     });
 
     socket.on('new user', function (data, callback) {
         callback(true);
         //take the data thats passed into 'new user' when it's emitted and set it as the socket username
         socket.username = data;
+        console.log('data = ' + data);
         //prints username
         console.log('socket.username = ' + socket.username);
         
         tmUsers.push(socket.username);
         updateUsernames();
-        console.log('tmUsers after "new user" is emittted = ' + tmUsers);
+        //updateCameras();
+        console.log('users after "new user" is emittted = ' + tmUsers);
     });
 
     function updateUsernames(){
-        //socket.emit('get users', tmUsers);
-        io.sockets.emit('get users', tmUsers);
-        console.log('updated tmUsers: ' + tmUsers);
+        //socket.emit('getUsers', users);
+
+        //add from camera implementation - socket.on('updateUser', function (data){ $('#'+data.id).attr('src', data.capture); });
+        //$('#'+data.id).attr('src', data.capture);
+
+        io.sockets.emit('getUsers', tmUsers);
+        console.log('updated users: ' + tmUsers);
+
+        
     }
 
     //listen for the 'typing' message - which we created and are using for whenever the user types into the fields
@@ -109,10 +113,4 @@ io.on('connection', function(socket){
         //console.log('Recieving data' + data + 'from socket' + socket.id);
         //console.log(data);
     });
-
-    socket.on('message', function(message) {
-        //console.log('Client received message:', message);
-        //start();
-    });
-
 });

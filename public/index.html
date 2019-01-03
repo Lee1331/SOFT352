@@ -29,27 +29,6 @@
     <title>Hangouts</title>
 </head>
 <body>
-    <!--<div id="userFormArea">
-        <form id="userForm">
-            <div class="form-group">
-                <label>Enter Username</label>
-                <input class="form-control" id="usernameTest">-->
-                <!--<label>Enter Room Number</label>-->
-                <!--<label>Enter colour</label>-->
-                <!--<input type="submit" class="btn btn-primary" value="Submit Username"/>
-            </div>
-        </form>
-    </div>-->
-        <div id="tmUserFormArea">
-            <form id="tmUserForm">
-                <div class="form-group">
-                    <label>Enter Username</label>
-                    <textarea class="form-control" id="tmUsername"></textarea>
-                    <input type="submit" class="btn btn-primary" value="Submit Username"/>
-                </div>
-            </form>
-        </div>
-
         <div id="canvas"></div>
         
         <div id="right"> 
@@ -57,7 +36,6 @@
                 <button class="tablinks" onclick="openOption(event, 'ChatSection')">Chat</button>
                 <button class="tablinks" onclick="openOption(event, 'OnlineUserSection')">Online Users</button>
                 <button class="tablinks" onclick="openOption(event, 'CameraSection')">Cameras</button>
-                <button class="tablinks" onclick="openOption(event, 'PaletteSection')">Palette</button>
             </div>
 
             <div id="ChatSection" class="tabcontent">
@@ -75,46 +53,31 @@
 
             <div id="OnlineUserSection" class="tabcontent">
                 <h3>Online Users</h3>
+                <div id="userFormArea">
+                    <form id="userForm">
+                        <div class="form-group">
+                            <h4>Add Username</h4>
+                            <textarea class="form-control" id="usernameFormValue"></textarea>
+                            <input type="submit" class="btn btn-primary" value="Submit Username"/>
+                        </div>
+                    </form>
+                </div>
+        
                 <ul class="form-group" id="tmUsers"></ul>
             </div>
 
             <div id="CameraSection" class="tabcontent">
                 <h3>Cameras</h3>
-                <!--<div id="roomNumber">Room</d>-->
-                
-                    <!--<div id="videos">
-                        <video id="localVideo" autoplay muted playsinline></video>
-                        <video id="remoteVideo" autoplay playsinline></video>
-                    </div>-->
                     <div id="cameraWindow">
                         <div id="cameraCanvas"></div>
                     </div>
-                <!--</div>-->
             </div>
-            
-            <div id="PaletteSection" class="tabcontent">
-                <h3>Palette</h3>
-                <h4>Shapes</h4>
-                <button id="squareBtn" onclick="brushSquare()">Square</button>
-                <h4>Colours</h4>
-                <button id="redBtn" onclick="brushRed()">Red</button>
-                <button id="greenBtn" onclick="brushGreen()">Green</button>
-                <button id="blueBtn"onclick="brushBlue()">Blue</button>
-                <button id="randomBtn"onclick="randomColour()">Random Colour</button>
-                <h4>Hue</h4>
-            </div>
-            
         </div>
 </body>
 
-<script src="tabs.js"></script>
 <script src="sockets.js"></script>
+<script src="tabs.js"></script>
 <script src="chat.js"></script>
-
-<!--Used by WebRTC to 'adapt' the differences between browsers-->
-<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script src="cameras.js"></script>
-
 <script src="canvas.js"></script>
-
 </html>
