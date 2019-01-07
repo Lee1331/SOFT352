@@ -33,9 +33,9 @@
         
         <div id="right"> 
             <div class="tab">
-                <button class="tablinks" onclick="openOption(event, 'ChatSection')">Chat</button>
-                <button class="tablinks" onclick="openOption(event, 'OnlineUserSection')">Online Users</button>
-                <button class="tablinks" onclick="openOption(event, 'CameraSection')">Cameras</button>
+                <button class="tablinks" id= "chatSection" onclick="openOption(event, 'ChatSection')">Chat</button>
+                <button class="tablinks" id= "onlineUserSection" onclick="openOption(event, 'OnlineUserSection')">Online Users</button>
+                <button class="tablinks"  id="cameraSection" onclick="openOption(event, 'CameraSection')">Cameras</button>
             </div>
 
             <div id="ChatSection" class="tabcontent">
@@ -58,12 +58,12 @@
                         <div class="form-group">
                             <h4>Add Username</h4>
                             <textarea class="form-control" id="usernameFormValue"></textarea>
-                            <input type="submit" class="btn btn-primary" value="Submit Username"/>
+                            <input type="submit" class="btn btn-primary" id="usernameFormSubmit" value="Submit Username"/>
                         </div>
                     </form>
                 </div>
         
-                <ul class="form-group" id="tmUsers"></ul>
+                <ul class="form-group" id="users"></ul>
             </div>
 
             <div id="CameraSection" class="tabcontent">
