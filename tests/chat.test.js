@@ -9,10 +9,12 @@ const {chat} = require('../public/chat');
 
 //end to end UI tests
 test('e2e - screenshot UI test', async () => {
-    const browser = await puppeteer.launch({
-        headless: false,
-        slowMo: 80
-    });
+    /*const browser = await puppeteer.launch({
+        
+        headless: false, //disable headless mode - debugging
+        slowMo: 80 //slow motion - debugging
+    });*/
+    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
     
     const page = await browser.newPage();
     //resolve this promise as soon as the DOM content has loaded
@@ -28,10 +30,7 @@ test('e2e - screenshot UI test', async () => {
 }, 10000);
 
 test('e2e - chat UI test', async () => {
-    const browser = await puppeteer.launch({
-        headless: false,
-        slowMo: 80
-    });
+    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
     
     const page = await browser.newPage();
     await page.goto('http://127.0.0.1:5500/public/index.html');
@@ -50,10 +49,7 @@ test('e2e - chat UI test', async () => {
 }, 10000);
 
 test('e2e - onlineUser UI test', async () => {
-    const browser = await puppeteer.launch({
-        headless: false,
-        slowMo: 80
-    });
+    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
     
     const page = await browser.newPage();
     await page.goto('http://127.0.0.1:5500/public/index.html');
@@ -71,10 +67,7 @@ test('e2e - onlineUser UI test', async () => {
 }, 10000);
 
 test('e2e - canvas client side UI test', async () => {
-    const browser = await puppeteer.launch({
-        headless: false,
-        slowMo: 80
-    });
+    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
     
     const page = await browser.newPage();
     await page.goto('http://127.0.0.1:5500/public/index.html', {waitUntil: 'domcontentloaded'});
@@ -86,10 +79,7 @@ test('e2e - canvas client side UI test', async () => {
 }, 10000);
 
 test('e2e - chat content test', async () => {
-    const browser = await puppeteer.launch({
-        headless: false,
-        slowMo: 80
-    });
+    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
     
     const page = await browser.newPage();
     await page.goto('http://127.0.0.1:5500/public/index.html');

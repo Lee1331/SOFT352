@@ -105,52 +105,38 @@ let canvasSketch = function(canvas) {
 //craete canvas object set canvasSketchs parent to be 'canvas'
 let p5_CanvasSketch = new p5(canvasSketch, 'canvas');
 
-//Sketch 1
+//camera canvas
 let cameraSketch = function(canvas) {
-    //canvas.cameraCanvasDiv = document.getElementById('cameraCanvas');
-    //canvas.canvasWidth = canvas.cameraCanvasDiv.offsetWidth; 
-    //canvas.canvasHeight = canvas.cameraCanvasDiv.offsetHeight; 
-    //canvas.x = 320;
-    //canvas.y = 480;
-    
-    //canvas.cameraCanvas; 
-    let cameraCanvas;
-
-    let cameraCanvasDiv = document.getElementById('cameraCanvas');
-    //console.log('cameraCanvasDiv = ' + cameraCanvasDiv.offsetWidth)
-    //let canvasWidth = cameraCanvasDiv.offsetWidth; 
-    //let canvasHeight = cameraCanvasDiv.offsetHeight; 
-    let canvasWidth = 320; 
-    let canvasHeight = 240;
-    //let canvasWidth = cameraCanvasDiv.clientWidth; 
-    //let canvasHeight = cameraCanvasDiv.clientHeight; 
-    
+    //set size
+    canvas.canvasWidth = 320; 
+    canvas.canvasHeight = 240; 
+    //camera setup
     canvas.video;
-    canvas.fps = canvas.frameRate();
-    console.log(`canvasWidth = ${canvasWidth}, canvasHeight = ${canvasHeight}`);
+    canvas.fps; 
+    //console.log(`canvasWidth = ${canvas.canvasWidth}, canvasHeight = ${canvas.canvasHeight}`);
+    
     canvas.setup = function() {
-        canvas.createCanvas(canvasWidth, canvasHeight);
+        canvas.createCanvas(canvas.canvasWidth, canvas.canvasHeight);
+        canvas.video = canvas.frameRate(30);
         canvas.video = canvas.createCapture(canvas.VIDEO);
-        canvas.video.size(canvasWidth, canvasHeight);
+        canvas.video.size(canvas.canvasWidth, canvas.canvasHeight);
         //hide original video/DOM element - p5 also shows the capture feed, 'hide()' hides it
         canvas.video.hide();
     }
     canvas.draw = function() {
         //draw/display camera feed
-        canvas.image(canvas.video, 0, 0, canvasWidth, canvasHeight);
-        canvas.text(canvas.fps.toFixed(2) + " FPS", 10, 10);
+        canvas.image(canvas.video, 0, 0, canvas.canvasWidth, canvas.canvasHeight);
+        //canvas.text(canvas.fps.toFixed(2) + " FPS", 10, 10);
         //console.log('fps = ' + canvas.frameRate());
-        //if a camera exists, emit updateUser and pass it the cameras data feed/stream 
-        //if (canvas.frameRate() > 55 && cameraId != null){
-        if (cameraId != null){
+
+        //if a camera exists, emit updateUser and pass it the cameras data feed/stream - removing for now to increase performance 
+        //if (cameraId != null){
             //socket.emit('updateUser', {id:id, capture:cameraCanvas.canvas.toDataURL()});
             socket.emit('updateUser', {id:cameraId, capture:canvas.canvas.toDataURL()});
-        }
+        //}
 
     }
-    canvas.mousePressed = function() {
-        canvas.video.remove;
-    }
+
 }
 //craete camera object set canvasSketchs parent to be 'cameraCanvas'
 let p5_CameraSketch = new p5(cameraSketch, 'cameraCanvas');
