@@ -18,7 +18,8 @@
   "homepage": "https://github.com/Lee1331/SOFT352#readme",
   "devDependencies": {
     "jest": "^23.6.0",
-    "puppeteer": "^1.11.0"
+    "puppeteer": "^1.11.0",
+    "supertest": "^3.3.0"
   },
   "dependencies": {
     "express": "^4.16.4",

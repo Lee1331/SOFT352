@@ -1,90 +1,75 @@
-
-const {server} = require('../server');
-const {startServer} = require('../server');
-
-//server.updateUsernames
-
-//test('should return server started message with the port number', function() {
-    //expect(startServer().toBe('server started, and listening to requests on port 5500'));
-    //app.listen().then(startServer().toBe('server started, and listening to requests on port 5500'));
-//});
-const ioClient = require('socket.io-client');
 const http = require('http');
-const ioBackEnd = require('socket.io');
+const ioClientEnd = require('socket.io-client'); 
+const ioServerEnd = require('socket.io');
 
 let socket;
 let httpServer;
-let httpServerAddr;
+let httpServerAddress;
 let ioServer;
 
-/**
- * Setup WS & HTTP servers
- */
+//at the start of the all the tests
 beforeAll((done) => {
+  //set up the servers
   httpServer = http.createServer().listen();
-  httpServerAddr = httpServer.listen().address();
-  ioServer = ioBackEnd(httpServer);
+  httpServerAddress = httpServer.listen().address();
+  ioServer = ioServerEnd(httpServer);
+  //ends function
   done();
 });
-
-/**
- *  Cleanup WS & HTTP servers
- */
-afterAll((done) => {
-  ioServer.close();
-  httpServer.close();
-  done();
-});
-
-/**
- * Run before each test
- */
+//before each test runs
 beforeEach((done) => {
-  // Setup
-  // Do not hardcode server port and address, square brackets are used for IPv6
-  socket = ioClient.connect(`http://[${httpServerAddr.address}]:${httpServerAddr.port}`, {
-    'reconnection delay': 0,
-    'reopen delay': 0,
-    'force new connection': true,
-    transports: ['websocket'],
-  });
-  socket.on('connect', () => {
-    done();
-  });
+  //connect socket, make sures theres no delay on connecting opening, and force a connection. use websockets are the method of transport 
+  socket = ioClientEnd.connect(`http://[${httpServerAddress.address}]:${httpServerAddress.port}`, {
+  'reconnection delay': 0,
+  'reopen delay': 0,
+  'force new connection': true,
+  transports: ['websocket']
 });
-
-/**
- * Run after each test
- */
+socket.on('connect', () => {
+  //ends function
+  done();
+});
+});
+///after each test
 afterEach((done) => {
-    //Cleanup
+    //disconnect the socket if it's still connected
     if (socket.connected) {
         socket.disconnect();
     }
+    //ends function
     done();
 });
 
+//once all the tests have run
+afterAll((done) => {
+  //close the servers
+  ioServer.close();
+  httpServer.close();
+  //ends function
+  done();
+});
 
-describe('basic socket.io example', () => {
-  test('should communicate', (done) => {
-    // once connected, emit Hello World
-    ioServer.emit('echo', 'Hello World');
-    socket.once('echo', (message) => {
-      // Check that the message matches
-      expect(message).toBe('Hello World');
+describe('test that socket.io works', () => {
+  test('test messages can be emitted and then handled, and socket existance', (done) => {
+    //when the server has connected, emit and pass it 'now connected'
+    ioServer.emit('connected', 'now connected');
+    //once the 'connected' emit has been recieved
+    socket.once('connected', (message) => {
+      //see if the message matches the one we emitted, this being 'connected' 
+      expect(message).toBe('now connected');
+      //ends function
       done();
     });
-    ioServer.on('connection', (mySocket) => {
-      expect(mySocket).toBeDefined();
+    //when the server connects to a socket
+    ioServer.on('connection', (createdSocket) => {
+      //the socket should exist
+      expect(createdSocket).toBeDefined();
+    });
+    //when the server disconnects from a socket
+    ioServer.on('disconnection', (createdSocket) => {
+      //the socket shouldn't exist
+      expect(createdSocket).toBeUndefined();
     });
   });
-  test('should communicate with waiting for socket.io handshakes', (done) => {
-    // Emit sth from Client do Server
-    socket.emit('examlpe', 'some messages');
-    // Use timeout to wait for socket.io server handshakes
-    setTimeout(() => {
-      // Put your server side expect() here
-      done();
-    }, 50);
-  });
+
 });

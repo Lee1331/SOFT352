@@ -1,4 +1,4 @@
-window.onload=function(){
+//window.onload=function(){ //needed for testing to prevent 'TypeError: Cannot read property 'addEventListener' of null' error, disabled for the actual app
 p5.disableFriendlyErrors = true; // disables the p5 Friendly Error System (FES) - performance increase
 
 //used to keep track of the uses camera
@@ -50,38 +50,47 @@ let canvasSketch = function(canvas) {
     canvas.r = canvas.randNum();
     canvas.g = canvas.randNum();
     canvas.b = canvas.randNum();
-    canvas.backgroundColour = canvas.randNum()
-    
-    //default p5 functions
+    canvas.backgroundColour = canvas.randNum();
+    //set peer colours
+    canvas.pr = canvas.randNum();
+    canvas.pg = canvas.randNum();
+    canvas.pb = canvas.randNum();
+
+    //default p5 function/reserved keyword
     canvas.setup = function() {
         canvas.createCanvas(canvas.canvasWidth, canvas.canvasHeight);
         canvas.background(canvas.backgroundColour);
     }
+    //default p5 function/reserved keyword
     canvas.draw = function(){
         canvas.fill(canvas.r, canvas.g, canvas.b);
         
     }
+    //my function
     canvas.peerDraw = function(){
-        canvas.fill(canvas.r, canvas.g, canvas.b);
+        canvas.fill(canvas.pr, canvas.pg, canvas.pb);
 
     }
+    //default p5 function/reserved keyword
     canvas.mousePressed = function(){
         canvas.noStroke();
         canvas.ellipse(canvas.mouseX, canvas.mouseY, 18, 18);
+        //used for peer users
         let data = {
             x: canvas.mouseX,
             y: canvas.mouseY
         }
         socket.emit('mouse', data);
     }
-    
+    //default p5 function/reserved keyword
     canvas.windowResized = function() {
         canvas.resizeCanvas(canvas.canvasWidth, canvas.canvasHeight);
     }
-    
+    //default p5 function/reserved keyword
     canvas.mouseDragged = function(){
         canvas.noStroke();
         canvas.draw();
+        //used for peer users
         let data = {
             x: canvas.mouseX,
             y: canvas.mouseY
@@ -93,16 +102,15 @@ let canvasSketch = function(canvas) {
         socket.emit('mouse', data);
 
     }
-    
-    
+    //when mouse is recieved
     socket.on('mouse', function(data){
-        //draw AT the location of the data object -  data.x and y
+        //draw the peer users data on the canvas
         canvas.noStroke();
         canvas.peerDraw();
         canvas.ellipse(data.x, data.y, 18, 18);
     });
 }
-//craete canvas object set canvasSketchs parent to be 'canvas'
+//create canvas object set canvasSketchs parent to be 'canvas'
 let p5_CanvasSketch = new p5(canvasSketch, 'canvas');
 
 //camera canvas
@@ -117,6 +125,7 @@ let cameraSketch = function(canvas) {
     
     canvas.setup = function() {
         canvas.createCanvas(canvas.canvasWidth, canvas.canvasHeight);
+        //cap the framerate to improve performance
         canvas.video = canvas.frameRate(30);
         canvas.video = canvas.createCapture(canvas.VIDEO);
         canvas.video.size(canvas.canvasWidth, canvas.canvasHeight);
@@ -129,16 +138,15 @@ let cameraSketch = function(canvas) {
         //canvas.text(canvas.fps.toFixed(2) + " FPS", 10, 10);
         //console.log('fps = ' + canvas.frameRate());
 
-        //if a camera exists, emit updateUser and pass it the cameras data feed/stream - removing for now to increase performance 
-        //if (cameraId != null){
-            //socket.emit('updateUser', {id:id, capture:cameraCanvas.canvas.toDataURL()});
+        //if a camera exists, emit updateUser and pass it the cameras data feed/stream
+        if (cameraId != null){
             socket.emit('updateUser', {id:cameraId, capture:canvas.canvas.toDataURL()});
-        //}
+        }
 
     }
 
 }
-//craete camera object set canvasSketchs parent to be 'cameraCanvas'
+//create camera object set canvasSketchs parent to be 'cameraCanvas'
 let p5_CameraSketch = new p5(cameraSketch, 'cameraCanvas');
-module.exports = canvas;
-}
+//module.exports = canvas;
+//}

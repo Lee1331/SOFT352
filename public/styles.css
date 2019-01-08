@@ -81,9 +81,6 @@ button{
     background: #555;
     width: 100%;
 }
-.leftContainer{
-    background-color: aqua;
-}
 
 /*Tab stuff*/
 /* Style the tab */
@@ -127,7 +124,6 @@ button{
     border-top: none;
 }
 
-/*tabSection*/
 #tabSection{
     width: 100%;
 }
@@ -146,28 +142,21 @@ button{
     /*background-color: #ddd;*/
 }
 
-/*Testing creating a user form*/
-/*A#messageArea{
-    margin-top: 30px;
-    display: none;
-}*/
 ul#users li {
     list-style-type: none;
     border: 1px solid #555;
     
 }
-
+/*set size of peer cameras*/
 img{
     width: 320px;
     height: 240px;
 }
 
 #cameraWindow{
-    /*width: 100%;
-    height: 670px;*/
-    /*width: 320px;
-    height: 240px;*/
     height: 670px;
     overflow: auto;
-    /*background: #f9f9f9;*/
+}
+#usernameFormSubmit{
+    background-color: #555;
 }

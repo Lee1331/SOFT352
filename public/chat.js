@@ -1,4 +1,4 @@
-window.onload=function(){
+//window.onload=function(){ //needed for testing to prevent 'TypeError: Cannot read property 'addEventListener' of null' error, disabled for the actual app
     //Dom
     let username = document.getElementById('username');
     let message = document.getElementById('message');
@@ -28,8 +28,9 @@ window.onload=function(){
 
     btn.addEventListener('click', function(){
         //send a message down the web socket
-        //p1 = message name
-        //p2 = the meesage/data we want to send - an object
+            //p1 = message name
+            //p2 = the meesage/data we want to send
+        
         socket.emit('chat', {
             //get value field of the message input field
             message: message.value,
@@ -91,14 +92,26 @@ window.onload=function(){
             console.log('addUsername = ' + addUsername);
             users.appendChild(li);
         }*/
-        for(user in data){
+        /*for(user in data){
             //the names dont get removed when users leave the session
             let addUsername = document.createTextNode(data[user]);
             console.log('addUsername data[i] = ' + data[user]);
             li.appendChild(addUsername);
             console.log('addUsername = ' + addUsername);
             users.appendChild(li);
+        }*/
+        //let test = document.getElementById('test');
+        //having to use jQuery as regular .js isnt behaving correctly, and it allows us to user the 'html()' function
+        let usersDiv = $('#users');
+        let usernames = '';
+        //output data to DOM via the output DOM element
+        for (user in data){
+                //test.innerHTML += '<p><strong>'+ data[user] +'</p>';
+                usernames += '<p><strong>'+ data[user] +'</p>';
+            
         }
+        //usersDiv.innerHTML = usernames;
+        usersDiv.html(usernames);
     });
 
     socket.on('greetUser', function(data) {
@@ -108,5 +121,5 @@ window.onload=function(){
         alert(data + ' has left');
     })
     
-    module.exports = chat;
-}
+    //module.exports = chat;
+//}

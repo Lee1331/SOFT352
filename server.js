@@ -24,12 +24,14 @@ let socketConnections = [];
 let cameras = [];
 
 //if a user connects to the server...
-    //handle 'chat', 'typing', 'mouse', events 
+    //handle server-side events 
 io.on('connection', function(socket){
     
     //grab the users camera feed
     socket.emit('cameraId', cameras.length);
+    //look at this - this is probably why multiple img tags are show even when theres less users
     cameras.push(cameras.length);
+
     io.emit('getCameras', cameras);
     
     //----listen for server end connection events----//
@@ -39,18 +41,17 @@ io.on('connection', function(socket){
     console.log('Connected, there are ' + cameras.length + ' cameras connected');
 
     socket.on('newUser', function (data, callback) {
+        //'callback()' allows us to pass data to the client-side 'newUser' emit, this is being used on the client to check if a new user has joined
         callback(true);
         //take the data thats passed into 'newUser' when it's emitted and set it as the socket username
         socket.username = data;
         console.log('data = ' + data);
         //prints username
-        console.log('socket.username = ' + socket.username);
+        //console.log('socket.username = ' + socket.username);
         
         users.push(socket.username);
         updateUsernames();
-        //updateCameras();
-        //updateSockets();
-        console.log('users after "newUser" is emittted = ' + users);
+        //console.log('users after "newUser" is emittted = ' + users);
         socket.emit('greetUser', socket.username);
     });
 
@@ -84,11 +85,8 @@ io.on('connection', function(socket){
         //socket.emit('updateUser', data);
     });
 
-
-
 	socket.on('updateImage', function(data){
 		socket.broadcast.emit('updateImage',data);
-		//socket.emit('updateImage',data);
 	});
 
     //----listen for server end chat events----//
@@ -108,11 +106,7 @@ io.on('connection', function(socket){
 
         //call the 'broadcast.emit' function to send a message back out to all other sockets outside of the one sendning the message
         socket.broadcast.emit('mouse', data);
-
         //print the data from the 'mouse' message
         //console.log(data);
     });
 });
-
-module.exports = server;
-exports.startServer = startServer;
