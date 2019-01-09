@@ -4,13 +4,13 @@ p5.disableFriendlyErrors = true; // disables the p5 Friendly Error System (FES) 
 //used to keep track of the uses camera
 let cameraId;
 
-//Client Side Canvas/Camera sockets
+//Set users camera ID
 socket.on('cameraId', function (updatedCameraId) {
     cameraId = updatedCameraId;
     //console.log('cameraId = ' + cameraId);
 
 });
-
+//update and insert users camera into the DOM
 socket.on('getCameras', function (camera) {
     let cameraCanvasDiv = document.getElementById('cameraCanvas');
 
@@ -22,12 +22,11 @@ socket.on('getCameras', function (camera) {
         if(cameraElement != cameraId){
             cameraCanvasDiv.insertAdjacentHTML('beforeend', '<img id='+cameraElement+'>');
             console.log('camera = ' + camera);
-
         }
     });
 });
-
-socket.on('updateUser', function (data) {
+//stream camera data
+socket.on('updateCameras', function (data) {
     $('#'+data.id).attr('src', data.capture);
     //console.log(data.id);
 });
@@ -66,7 +65,7 @@ let canvasSketch = function(canvas) {
         canvas.fill(canvas.r, canvas.g, canvas.b);
         
     }
-    //my function
+    //my function - used to draw peer users marks
     canvas.peerDraw = function(){
         canvas.fill(canvas.pr, canvas.pg, canvas.pb);
 
@@ -95,14 +94,11 @@ let canvasSketch = function(canvas) {
             x: canvas.mouseX,
             y: canvas.mouseY
         }
-        
         canvas.ellipse(canvas.mouseX, canvas.mouseY, 18, 18);
-        
-        //then we emit the data, and inlcude a name for the message ('mouse' in this case)
+        //emit whenever a peer user is drawning on the canvas
         socket.emit('mouse', data);
-
     }
-    //when mouse is recieved
+    //draw the peer users data
     socket.on('mouse', function(data){
         //draw the peer users data on the canvas
         canvas.noStroke();
@@ -138,9 +134,9 @@ let cameraSketch = function(canvas) {
         //canvas.text(canvas.fps.toFixed(2) + " FPS", 10, 10);
         //console.log('fps = ' + canvas.frameRate());
 
-        //if a camera exists, emit updateUser and pass it the cameras data feed/stream
+        //if a camera exists, emit updateCameras and pass it the cameras data feed/stream
         if (cameraId != null){
-            socket.emit('updateUser', {id:cameraId, capture:canvas.canvas.toDataURL()});
+            socket.emit('updateCameras', {id:cameraId, capture:canvas.canvas.toDataURL()});
         }
 
     }

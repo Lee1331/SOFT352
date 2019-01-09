@@ -23,85 +23,74 @@ let users = [];
 let socketConnections = [];
 let cameras = [];
 
-//if a user connects to the server...
-    //handle server-side events 
+//if a user connects to the server... handle server-side events 
 io.on('connection', function(socket){
-    
-    //grab the users camera feed
+    //set the users camera id
     socket.emit('cameraId', cameras.length);
-    //look at this - this is probably why multiple img tags are show even when theres less users
+    //push cameras into array
     cameras.push(cameras.length);
-
-    io.emit('getCameras', cameras);
+    //grab the users camera feed
+    socket.emit('getCameras', cameras);
     
     //----listen for server end connection events----//
+    //push connected socket into array
     socketConnections.push(socket);
     console.log('Connected, there are ' + users.length + ' users connected');
     console.log('Connected, there are ' + socketConnections.length + ' sockets connected');
     console.log('Connected, there are ' + cameras.length + ' cameras connected');
 
+    //adds user to array, updates list of connected users
     socket.on('newUser', function (data, callback) {
         //'callback()' allows us to pass data to the client-side 'newUser' emit, this is being used on the client to check if a new user has joined
         callback(true);
         //take the data thats passed into 'newUser' when it's emitted and set it as the socket username
         socket.username = data;
-        console.log('data = ' + data);
         //prints username
         //console.log('socket.username = ' + socket.username);
-        
         users.push(socket.username);
+        //console.log('Connected, there are ' + users.length + ' users connected');
         updateUsernames();
         //console.log('users after "newUser" is emittted = ' + users);
         socket.emit('greetUser', socket.username);
     });
-
+    //removes user data from arrays once they leave
     socket.on('disconnect', function(data){
         //usernames
+        socket.emit('farewellUser', socket.username);
         users.splice(users.indexOf(socket.username), 1);
         //used to update the 'Online Users' section
         updateUsernames();
         //console.log('Disconnected, there are ' + users.length + ' users connected');
-        socket.emit('greetUser', socket.username);
 
         //sockets
         socketConnections.splice(socketConnections.indexOf(socket), 1);
         //console.log('Disconnected, there are ' + socketConnections.length + ' sockets connected');
-    
+
         //cameras
         cameras.splice(cameras.indexOf(socket), 1);
         //console.log('Disconnected, there are ' + cameras.length + ' cameras connected');
     });
-
+    //update the connected users
     function updateUsernames(){
         //emit a site wide (not socket wide) message to get the users logged into the site
         io.sockets.emit('getUsers', users);
         //console.log('updated users: ' + users);
     }
-
-    //this probably should be 'updateCameras
-        //this is also probably the issue with performance, as this is calling/dealing with the cameras
-	socket.on('updateUser', function(data){
-        socket.broadcast.emit('updateUser', data);
-        //socket.emit('updateUser', data);
+    //update the connected cameras
+	socket.on('updateCameras', function(data){
+        socket.broadcast.emit('updateCameras', data);
     });
-
-	socket.on('updateImage', function(data){
-		socket.broadcast.emit('updateImage',data);
-	});
-
-    //----listen for server end chat events----//
+    //listen for server end chat events
     socket.on('chat', function(data){
         io.sockets.emit('chat', data);
     });
-
-    //listen for the 'typing' message - which we created and are using for whenever the user types into the fields
-    //data is the users handle
+    //listen for the 'typing' message
     socket.on('typing', function(data){
-        //broadcase the messsage to every other socket - that isnt this one/the one typing
+        //broadcast the messsage to every other socket - that isnt this one/the one typing
             //emit the 'typing' message, and the data
         socket.broadcast.emit('typing', data);
     });
-
+    //listen for server end mouse events
     socket.on('mouse', function(data){  
 
         //call the 'broadcast.emit' function to send a message back out to all other sockets outside of the one sendning the message
