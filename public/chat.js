@@ -1,16 +1,39 @@
 //window.onload=function(){ //needed for testing to prevent 'TypeError: Cannot read property 'addEventListener' of null' error, disabled for the actual app
     //Dom
-    let username = document.getElementById('username');
-    let message = document.getElementById('message');
-    let output = document.getElementById('output');
-    let feedback = document.getElementById('feedback');
-    let btn = document.getElementById('sendMessage');
+    // let username = document.getElementById('username');
+    // let message = document.getElementById('message');
+    // let output = document.getElementById('output');
+    // let feedback = document.getElementById('feedback');
+    // let btn = document.getElementById('sendMessage');
 
-    let userForm = document.getElementById('userForm');
-    let userFormArea = document.getElementById('userFormArea');
-    let users = document.getElementById('users');
-    let usernameFormValue = document.getElementById('usernameFormValue');
+    // let userForm = document.getElementById('userForm');
+    // let userFormArea = document.getElementById('userFormArea');
+    // let users = document.getElementById('users');
+    // let usernameFormValue = document.getElementById('usernameFormValue');
     
+    let DOMStrings = {
+        username: 'username',
+        message: 'message',
+        output: 'output',
+        feedback: 'feedback',
+        btn: 'sendMessage',
+        userForm: 'userForm',
+        userFormArea: 'userFormArea',
+        users: 'users',
+        usernameFormValue: 'usernameFormValue',
+    }
+
+    let username = document.getElementById(DOMStrings.username);
+    let message = document.getElementById(DOMStrings.message);
+    let output = document.getElementById(DOMStrings.output);
+    let feedback = document.getElementById(DOMStrings.feedback);
+    let btn = document.getElementById(DOMStrings.btn);
+    let userForm = document.getElementById(DOMStrings.userForm);
+    let userFormArea = document.getElementById(DOMStrings.userFormArea);
+    let users = document.getElementById(DOMStrings.users);
+    let usernameFormValue = document.getElementById(DOMStrings.usernameFormValue);
+    
+
     //on submit, send the data the user entered
     userForm.addEventListener("submit", function(event){
         event.preventDefault();

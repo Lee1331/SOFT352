@@ -25,6 +25,7 @@ socket.on('getCameras', function (camera) {
         }
     });
 });
+
 //stream camera data
 socket.on('updateCameras', function (data) {
     $('#'+data.id).attr('src', data.capture);
@@ -138,10 +139,9 @@ let cameraSketch = function(canvas) {
         if (cameraId != null){
             socket.emit('updateCameras', {id:cameraId, capture:canvas.canvas.toDataURL()});
         }
-
     }
-
 }
+
 //create camera object set canvasSketchs parent to be 'cameraCanvas'
 let p5_CameraSketch = new p5(cameraSketch, 'cameraCanvas');
 //module.exports = canvas;

@@ -1,22 +1,21 @@
-let express = require('express');
-let socket = require('socket.io');
-let os = require('os');
+const express = require('express');
+const app = express();
+const server = require('http').Server(app);
+const socket = require('socket.io');
+const os = require('os');
 
-//create an express app/instance
-let app = express();
-
-let server = app.listen(5500, startServer());
-
-//show that the server is running
-function startServer(){
-    console.log('server started, and listening to requests on port 5500');
-};
+// let server = app.listen(5500, console.log('server started, and listening to requests on port 5500'));
+server.listen(5500, console.log('server started, and listening to requests on port 5500'));
 
 //serve the static files in the public folder to the browser, these are the files that the users will see
 app.use(express.static('public'));
 
 //create a socket on this server
 let io = socket(server);
+
+app.get('/', function(req, res){
+    res.sendFile(__dirname + '/index.html');
+});
 
 //arrays
 let users = [];
