@@ -13,9 +13,9 @@ app.use(express.static('public'));
 //create a socket on this server
 let io = socket(server);
 
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
-});
+// app.get('/', function(req, res){
+//     res.sendFile(__dirname + '/index.html');
+// });
 
 //arrays
 let users = [];

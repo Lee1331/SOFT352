@@ -1,17 +1,6 @@
 //window.onload=function(){ //needed for testing to prevent 'TypeError: Cannot read property 'addEventListener' of null' error, disabled for the actual app
     //Dom
-    // let username = document.getElementById('username');
-    // let message = document.getElementById('message');
-    // let output = document.getElementById('output');
-    // let feedback = document.getElementById('feedback');
-    // let btn = document.getElementById('sendMessage');
-
-    // let userForm = document.getElementById('userForm');
-    // let userFormArea = document.getElementById('userFormArea');
-    // let users = document.getElementById('users');
-    // let usernameFormValue = document.getElementById('usernameFormValue');
-    
-    let DOMStrings = {
+    const DOMStrings = {
         username: 'username',
         message: 'message',
         output: 'output',
@@ -45,7 +34,6 @@
         });
         
         usernameFormValue.value;
-        //console.log('usernameFormValue.value = ' + usernameFormValue.value);
     });
     //on click, send the data the user entered
     btn.addEventListener('click', function(){

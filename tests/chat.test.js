@@ -1,11 +1,6 @@
 const puppeteer = require('puppeteer');
 const {chat} = require('../public/chat');
 
-//it('ut - should output alert ', function(){
-    //expect(chat()).toBe('Enter a name and message');
-//});
-
-
 //end to end UI tests
 test('e2e 1- screenshot UI test', async () => {
     /*const browser = await puppeteer.launch({
@@ -20,7 +15,6 @@ test('e2e 1- screenshot UI test', async () => {
     await page.screenshot({path: 'UIScreenshotTest.png'});
     await page.close();
 
-
 }, 10000);
 
 test('e2e 2- chat UI test', async () => {
@@ -33,11 +27,7 @@ test('e2e 2- chat UI test', async () => {
     await page.type('input#username', 'Alice');
     await page.type('input#message', 'Hello');
     await page.click('button#sendMessage');
-
-    //const finalText = await page.$eval('', el => el.textContent);
-    //expect(finalText).toBe('Alice : Hello');
     await page.close();
-
 
 }, 10000);
 
